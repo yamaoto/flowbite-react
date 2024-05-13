@@ -1,6 +1,6 @@
 {
   "name": "yamaoto-flowbite-react-fork",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Official React components built for Flowbite and Tailwind CSS",
   "keywords": [
     "design-system",
@@ -64,6 +64,7 @@
     "debounce": "2.0.0",
     "flowbite": "2.3.0",
     "react-icons": "5.0.1",
+    "react-swipeable": "^7.0.1",
     "tailwind-merge": "2.2.2"
   },
   "devDependencies": {

@@ -10,6 +10,7 @@ import { mergeDeep } from "../../helpers/merge-deep";
 import { getTheme } from "../../theme-store";
 import type { DeepPartial } from "../../types";
 import type { FlowbiteBoolean } from "../Flowbite";
+import { useSwipeable } from "react-swipeable";
 
 export interface FlowbiteCarouselTheme {
   root: FlowbiteCarouselRootTheme;
@@ -56,7 +57,6 @@ export interface CarouselProps extends ComponentProps<"div"> {
   theme?: DeepPartial<FlowbiteCarouselTheme>;
   onSlideChange?: (slide: number) => void;
   pauseOnHover?: boolean;
-  setNavigate?: number;
 }
 
 export interface DefaultLeftRightControlProps extends ComponentProps<"div"> {
@@ -75,7 +75,6 @@ export const Carousel: FC<CarouselProps> = ({
   theme: customTheme = {},
   onSlideChange = null,
   pauseOnHover = false,
-  setNavigate = undefined,
   ...props
 }) => {
   const theme = mergeDeep(getTheme().carousel, customTheme);
@@ -132,21 +131,33 @@ export const Carousel: FC<CarouselProps> = ({
     }
   }, [onSlideChange, activeItem]);
 
-  useEffect(() => {
-    if (setNavigate) {
-      navigateTo(setNavigate);
-    }
-  }, [setNavigate, navigateTo])
-
   const handleDragging = (dragging: boolean) => () => setIsDragging(dragging);
 
   const setHoveringTrue = useCallback(() => setIsHovering(true), [setIsHovering]);
   const setHoveringFalse = useCallback(() => setIsHovering(false), [setIsHovering]);
 
+  const navigateNext = useCallback(()=>{
+    navigateTo(activeItem + 1)
+  }, [navigateTo, activeItem]);
+
+  const navigatePrev = useCallback(()=>{
+    navigateTo(activeItem - 1)
+  }, [navigateTo, activeItem]);
+
+  const swipe = useSwipeable({
+    onSwipedLeft: () => {
+      navigateNext();
+    },
+    onSwipedRight: () => {
+      navigatePrev();
+    },
+  });
+
   return (
     <div
       className={twMerge(theme.root.base, className)}
       data-testid="carousel"
+      {...swipe} 
       onMouseEnter={setHoveringTrue}
       onMouseLeave={setHoveringFalse}
       onTouchStart={setHoveringTrue}
