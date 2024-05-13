@@ -56,6 +56,7 @@ export interface CarouselProps extends ComponentProps<"div"> {
   theme?: DeepPartial<FlowbiteCarouselTheme>;
   onSlideChange?: (slide: number) => void;
   pauseOnHover?: boolean;
+  setNavigate?: number;
 }
 
 export interface DefaultLeftRightControlProps extends ComponentProps<"div"> {
@@ -74,6 +75,7 @@ export const Carousel: FC<CarouselProps> = ({
   theme: customTheme = {},
   onSlideChange = null,
   pauseOnHover = false,
+  setNavigate = undefined,
   ...props
 }) => {
   const theme = mergeDeep(getTheme().carousel, customTheme);
@@ -129,6 +131,12 @@ export const Carousel: FC<CarouselProps> = ({
       didMountRef.current = true;
     }
   }, [onSlideChange, activeItem]);
+
+  useEffect(() => {
+    if (setNavigate) {
+      navigateTo(setNavigate);
+    }
+  }, [setNavigate, navigateTo])
 
   const handleDragging = (dragging: boolean) => () => setIsDragging(dragging);
 
